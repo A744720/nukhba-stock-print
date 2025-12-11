@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تقرير المخزن - عيادات النخبة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      direction: rtl;
+      text-align: right;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.06);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button#printBtn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      background: #111827;
+      color: #fff;
+    }
+
+    button#printBtn:hover {
+      opacity: 0.9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+    }
+
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    .footer {
+      margin-top: 15px;
+      font-size: 11px;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* إخفاء الزر والأشياء الزائدة وقت الطباعة */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+
+      .page {
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      .actions {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="header">
+      <div>
+        <div class="title">تقرير المخزن</div>
+        <div class="subtitle">
+          تاريخ الطباعة:
+          <span id="printDate"></span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="printBtn" onclick="window.print()">🖨 طباعة</button>
+      </div>
+    </div>
+
+    <!-- هنا جدول المواد - حالياً مثال ثابت، تقدر تولّده ديناميكياً لاحقاً -->
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>اسم المادة</th>
+          <th>المتوفر</th>
+          <th>سعر الشراء</th>
+          <th>سعر البيع</th>
+          <th>سعر العرض</th>
+          <th>ملاحظات</th>
+        </tr>
+      </thead>
+      <tbody id="stockBody">
+        <!-- مثال بيانات ثابتة للاختبار -->
+        <tr>
+          <td>1</td>
+          <td>فيلر 1 مل</td>
+          <td>15</td>
+          <td>25,000</td>
+          <td>40,000</td>
+          <td>35,000</td>
+          <td>ـ</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>بوتوكس 50 وحدة</td>
+          <td>8</td>
+          <td>60,000</td>
+          <td>90,000</td>
+          <td>80,000</td>
+          <td>تنبيه: تواريخ قريبة</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <span>عيادات النخبة الطبية</span>
+      <span id="generatedBy">طُبع بواسطة نظام المخزن</span>
+    </div>
+  </div>
+
+  <script>
+    // عرض تاريخ اليوم تلقائياً
+    const d = new Date();
+    document.getElementById("printDate").textContent =
+      d.toLocaleDateString("ar-IQ", { year: "numeric", month: "2-digit", day: "2-digit" });
+
+    // (اختياري) قراءة باراميترات من الرابط مستقبلاً
+    // مثال: https://your-app.vercel.app/?by=Doctor
+    const params = new URLSearchParams(window.location.search);
+    const by = params.get("by");
+    if (by) {
+      document.getElementById("generatedBy").textContent = "تقرير مخصص: " + by;
+    }
+  </script>
+
+</body>
+</html>
