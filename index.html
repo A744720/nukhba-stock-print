@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>تقرير المخزن - عيادات النخبة</title>
+  <title>تقرير المخزن - Items</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -16,7 +16,7 @@
     }
 
     .page {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
       background: #ffffff;
       padding: 20px 25px;
@@ -30,6 +30,7 @@
       justify-content: space-between;
       margin-bottom: 20px;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .title {
@@ -73,6 +74,7 @@
     th, td {
       border: 1px solid #e5e7eb;
       padding: 6px 8px;
+      text-align: center;
     }
 
     th {
@@ -90,20 +92,19 @@
       color: #555;
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 5px;
     }
 
-    /* إخفاء الزر والأشياء الزائدة وقت الطباعة */
     @media print {
       body {
         background: #ffffff;
         padding: 0;
       }
-
       .page {
         box-shadow: none;
         border-radius: 0;
       }
-
       .actions {
         display: none !important;
       }
@@ -115,7 +116,7 @@
   <div class="page">
     <div class="header">
       <div>
-        <div class="title">تقرير المخزن</div>
+        <div class="title">تقرير المخزن (جدول Items)</div>
         <div class="subtitle">
           تاريخ الطباعة:
           <span id="printDate"></span>
@@ -127,61 +128,67 @@
       </div>
     </div>
 
-    <!-- هنا جدول المواد - حالياً مثال ثابت، تقدر تولّده ديناميكياً لاحقاً -->
     <table>
       <thead>
         <tr>
           <th>#</th>
-          <th>اسم المادة</th>
-          <th>المتوفر</th>
-          <th>سعر الشراء</th>
-          <th>سعر البيع</th>
-          <th>سعر العرض</th>
-          <th>ملاحظات</th>
+          <th>اسم المادة (ItemName)</th>
+          <th>سعر البيع 1 (DefaultSellPrice)</th>
+          <th>سعر البيع 2 (DefaultSellPrice2)</th>
+          <th>الكلفة (CostPerUnit)</th>
+          <th>الوحدة (Unit)</th>
         </tr>
       </thead>
-      <tbody id="stockBody">
-        <!-- مثال بيانات ثابتة للاختبار -->
-        <tr>
-          <td>1</td>
-          <td>فيلر 1 مل</td>
-          <td>15</td>
-          <td>25,000</td>
-          <td>40,000</td>
-          <td>35,000</td>
-          <td>ـ</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>بوتوكس 50 وحدة</td>
-          <td>8</td>
-          <td>60,000</td>
-          <td>90,000</td>
-          <td>80,000</td>
-          <td>تنبيه: تواريخ قريبة</td>
-        </tr>
+      <tbody id="itemsBody">
+        <!-- الصفوف تتعبّى بالجافاسكربت -->
       </tbody>
     </table>
 
     <div class="footer">
       <span>عيادات النخبة الطبية</span>
-      <span id="generatedBy">طُبع بواسطة نظام المخزن</span>
+      <span id="generatedBy">تقرير المخزن من جدول Items</span>
     </div>
   </div>
 
   <script>
-    // عرض تاريخ اليوم تلقائياً
+    // 🔹 مثال بيانات – غيّرها حسب شغلك أو استبدلها بداتا حقيقية لاحقاً
+    const items = [
+      {
+        ItemName: "فيلر 1 مل",
+        DefaultSellPrice: 35000,
+        DefaultSellPrice2: 30000,
+        CostPerUnit: 20000,
+        Unit: "قطعة"
+      },
+      {
+        ItemName: "بوتوكس 50 وحدة",
+        DefaultSellPrice: 90000,
+        DefaultSellPrice2: 80000,
+        CostPerUnit: 60000,
+        Unit: "عبوة"
+      }
+    ];
+
+    // تعبئة التاريخ
     const d = new Date();
     document.getElementById("printDate").textContent =
       d.toLocaleDateString("ar-IQ", { year: "numeric", month: "2-digit", day: "2-digit" });
 
-    // (اختياري) قراءة باراميترات من الرابط مستقبلاً
-    // مثال: https://your-app.vercel.app/?by=Doctor
-    const params = new URLSearchParams(window.location.search);
-    const by = params.get("by");
-    if (by) {
-      document.getElementById("generatedBy").textContent = "تقرير مخصص: " + by;
-    }
+    // تعبئة الجدول من المصفوفة
+    const tbody = document.getElementById("itemsBody");
+
+    items.forEach((item, index) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = 
+        <td>${index + 1}</td>
+        <td>${item.ItemName ?? ""}</td>
+        <td>${item.DefaultSellPrice ?? ""}</td>
+        <td>${item.DefaultSellPrice2 ?? ""}</td>
+        <td>${item.CostPerUnit ?? ""}</td>
+        <td>${item.Unit ?? ""}</td>
+    tbody.appendChild(tr);
+    });
   </script>
 
 </body>
